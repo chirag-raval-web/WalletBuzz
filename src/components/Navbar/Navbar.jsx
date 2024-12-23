@@ -19,9 +19,31 @@ const Navbar = () => {
   const handleOpenModal = () => setOpen(true);
   const handleCloseModal = () => setOpen(false);
 
-  const handleDisconnect = () => {
-    dispatch(clearWalletAddress()); 
-  };
+const handleDisconnect = async () => {
+  try {
+    if (window.ethereum) {
+      await window.ethereum.request({
+        method: "wallet_revokePermissions",
+        params: [
+          {
+            eth_accounts: {},
+          },
+        ],
+      });
+      console.log("MetaMask permissions revoked.");
+    }
+
+    
+    dispatch(clearWalletAddress());
+
+    alert("Wallet disconnected successfully.");
+  } catch (error) {
+    console.error("Error disconnecting wallet:", error);
+     
+  }
+};
+
+
 
   return (
     <AppBar

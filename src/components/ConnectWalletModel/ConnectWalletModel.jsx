@@ -12,7 +12,8 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import MetaMaskIcon from "../../asset/walletIcons/SVG_MetaMask_Icon_Color.svg";
 import { useDispatch } from "react-redux";
-import { setWalletAddress } from "../../redux/walletSlice"; // Import the action
+import { setWalletAddress } from "../../redux/walletSlice"; 
+import { Navigate } from "react-router-dom";
 
 const walletsData = [
   {
@@ -28,7 +29,7 @@ const ConnectWalletModel = ({ open, onClose }) => {
   const [showQR, setShowQR] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const dispatch = useDispatch(); // Use dispatch to update the Redux store
+  const dispatch = useDispatch(); 
 
   useEffect(() => {
     const updatedWallets = wallets.map((wallet) => ({
@@ -50,29 +51,37 @@ const ConnectWalletModel = ({ open, onClose }) => {
     setShowQR(false);
   };
 
-  const handleMetaMaskConnect = async () => {
-    if (window.ethereum) {
-      try {
-        // Request account access
-        const accounts = await window.ethereum.request({
-          method: "eth_requestAccounts",
-        });
+const handleMetaMaskConnect = async () => {
+  if (window.ethereum) {
+    try {
+      
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
 
-        // Log and dispatch the connected wallet address
-        const connectedAddress = accounts[0];
-        console.log("Connected to MetaMask address:", connectedAddress);
-
-        // Dispatch the address to Redux store
-        dispatch(setWalletAddress(connectedAddress));
-
-        // Optionally, you can perform additional actions with the connected address
-      } catch (error) {
-        console.error("User denied account access or error occurred:", error);
+      if (accounts.length === 0) {
+        throw new Error("No accounts found.");
       }
-    } else {
-      alert("MetaMask is not installed.");
+
+      const connectedAddress = accounts[0];
+      console.log("Connected to MetaMask address:", connectedAddress);
+      onClose();
+      
+      dispatch(setWalletAddress(connectedAddress));
+    } catch (error) {
+      if (error.code === 4001) {
+        console.error("Connection request was rejected by the user.");
+        alert("Connection request rejected. Please try again.");
+      } else {
+        console.error("Error connecting to MetaMask:", error);
+        alert("An error occurred while connecting to MetaMask.");
+      }
     }
-  };
+  } else {
+    alert("MetaMask is not installed. Please install MetaMask to continue.");
+  }
+};
+
 
   return (
     <Dialog
