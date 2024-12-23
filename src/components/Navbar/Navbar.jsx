@@ -10,12 +10,13 @@ import {
 import ConnectWalletModel from "../ConnectWalletModel/ConnectWalletModel";
 import { useDispatch, useSelector } from "react-redux";
 import { setWalletAddress, clearWalletAddress } from "../../redux/walletSlice"; 
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const walletAddress = useSelector((state) => state.wallet.address); 
   const dispatch = useDispatch(); 
-
+const navigate = useNavigate();
   const handleOpenModal = () => setOpen(true);
   const handleCloseModal = () => setOpen(false);
 
@@ -33,6 +34,8 @@ const handleDisconnect = async () => {
       console.log("MetaMask permissions revoked.");
     }
     dispatch(clearWalletAddress());
+     navigate("/");
+     setOpen(true)
     alert("Wallet disconnected successfully.");
   } catch (error) {
     console.error("Error disconnecting wallet:", error);
