@@ -13,7 +13,6 @@ const HomePage = () => {
         alignItems: "center",
         flexDirection: "column",
         textAlign: "center",
-
         color: "white",
         padding: 2,
         position: "relative", 

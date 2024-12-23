@@ -13,7 +13,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import MetaMaskIcon from "../../asset/walletIcons/SVG_MetaMask_Icon_Color.svg";
 import { useDispatch } from "react-redux";
 import { setWalletAddress } from "../../redux/walletSlice"; 
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const walletsData = [
   {
@@ -28,7 +28,7 @@ const ConnectWalletModel = ({ open, onClose }) => {
   const [wallets, setWallets] = useState(walletsData);
   const [showQR, setShowQR] = useState(false);
   const [loading, setLoading] = useState(false);
-
+const navigate = useNavigate();
   const dispatch = useDispatch(); 
 
   useEffect(() => {
@@ -66,7 +66,7 @@ const handleMetaMaskConnect = async () => {
       const connectedAddress = accounts[0];
       console.log("Connected to MetaMask address:", connectedAddress);
       onClose();
-      
+       navigate(`/${connectedAddress}/track`);
       dispatch(setWalletAddress(connectedAddress));
     } catch (error) {
       if (error.code === 4001) {

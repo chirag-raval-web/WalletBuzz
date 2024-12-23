@@ -32,10 +32,7 @@ const handleDisconnect = async () => {
       });
       console.log("MetaMask permissions revoked.");
     }
-
-    
     dispatch(clearWalletAddress());
-
     alert("Wallet disconnected successfully.");
   } catch (error) {
     console.error("Error disconnecting wallet:", error);
@@ -80,12 +77,20 @@ const handleDisconnect = async () => {
         </Typography>
 
         {/* Right side - Wallet Address or Connect Button */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.2 }}>
           {walletAddress ? (
             <>
               {/* Display wallet address with a disconnect button */}
-              <Typography sx={{ color: "white", fontWeight: "bold" }}>
-                
+              <Typography
+                sx={{
+                  textShadow:
+                    "0 0 80px rgb(192 219 255 / 75%), 0 0 32px rgb(65 120 255 / 24%)",
+                  background:
+                    "linear-gradient(45deg, #728490, #f6f7f6, #728490)",
+                  WebkitBackgroundClip: "text",
+                  color: "transparent",
+                }}
+              >
                 {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
               </Typography>
               <IconButton
@@ -99,7 +104,6 @@ const handleDisconnect = async () => {
               </IconButton>
             </>
           ) : (
-            
             <Button
               onClick={handleOpenModal}
               variant="contained"
